@@ -9,6 +9,7 @@ client.login(process.env.TOKEN);
 
 client.on('ready', () =>{
     console.log(`${client.user.tag} has logged in successfully!`);
+    client.user.setActivity(`I was born!`);
 })
 
 client.on('messageCreate', (message) => {
