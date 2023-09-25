@@ -5,6 +5,8 @@ import orderCommand from './commands/orders.js';
 import rolesCommand from './commands/roles.js';
 import userCommand from './commands/user.js';
 import channelCommand from './commands/channel.js';
+import banCommand from './commands/ban.js';
+import { ActionRowBuilder, SelectMenuBuilder } from '@discordjs/builders';
 
 config();
 
@@ -31,15 +33,42 @@ client.on('ready', () =>{
 
 client.on('interactionCreate', (interaction) => {
     if(interaction.isChatInputCommand()){
-        const food = interaction.options.get('food').value;
-        const drink = interaction.options.get('drink').value;
-        interaction.reply({ content: `Hello there! You ordered ${food} and ${drink}!` });
+        if(interaction.commandName === 'order'){
+            const actionRowComponent = new ActionRowBuilder()
+            .setComponents(
+                new SelectMenuBuilder()
+                .setCustomId('food_options')
+                .setOptions([
+                {
+                    label: 'Cake',
+                    value: 'Cake'
+                },
+                {
+                    label: 'Pizza',
+                    value: 'Pizza'
+                },
+                {
+                    label: 'Sushi',
+                    value: 'Sushi'
+                }
+            ])
+            );
+            interaction.reply({
+                components: [actionRowComponent.toJSON()],
+            })
+        }
     }
 });
 
 async function main(){
 
-    const commands = [orderCommand, rolesCommand, userCommand, channelCommand];
+    const commands = [
+        orderCommand, 
+        rolesCommand, 
+        userCommand, 
+        channelCommand, 
+        banCommand,
+    ];
 
     try{
         console.log('Started refreshing application (/) commands.');
